@@ -4,10 +4,28 @@ LabeledForm
 Introduction goes here.
 
 
+Todo
+=======
+Make grouping customizable
+
 Example
 =======
 
-Example goes here.
+labeled_form_for object do |form|
+	form.text_field :name
+	form.submit "Please save"
+end
+
+Produces:
+<form ...>
+  <p>
+    <label title="Name" for="object_name"/>
+    <input type="text" value="My Name" name="object[name]" id="object_name">
+  </p>
+  <p>
+    <input type="submit" value="Please save" id="object_name">
+  </p>
+</form>
 
 
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 DiMarcello, released under the MIT license
