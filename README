@@ -1,29 +1,47 @@
 LabeledForm
 ===========
 
-Introduction goes here.
+Automatic adds labels to each of your input fields and wraps them both in an paragraph.
+Options added to each field helper are:
+- :label, if set to false produces no label, otherwise defines the label text
+- :label_position, :before | :after (the field) (TODO)
+- :wrap, the wrap tag (default :p), false results in no wrap
 
-
-Todo
-=======
-Make grouping customizable
+Also includes an fieldset_for method, which extends fields_for
+with an fieldset tag and legend.
+Besides default html options, 
+- :legend sets the legend or if false produces no legend
+- :builder sets the builder to use if none specified uses the LabeledFormBuilder
 
 Example
 =======
 
 labeled_form_for object do |form|
 	form.text_field :name
+	form.text_area :body, :label => "Content"
+	form.fieldset_for(:author, :class => "test") do |fs|
+	  fs.text_field :username, :wrap => false
+	end
 	form.submit "Please save"
 end
 
 Produces:
 <form ...>
   <p>
-    <label title="Name" for="object_name"/>
-    <input type="text" value="My Name" name="object[name]" id="object_name">
+    <label title="Name" for="object_name">Name</label>
+    <input type="text" value="My Name" name="object[name]" id="object_name" />
   </p>
   <p>
-    <input type="submit" value="Please save" id="object_name">
+    <label title="Content" for="object_body">Content</label>
+    <textarea name="object[body]" id="object_body"></textarea>
+  </p>
+  <fieldset class="test">
+    <legend>Author</legend>
+    <label title="Username" for="object_author_username">Username</label>
+    <input type="text" value="user" name="object[author][username]" id="object_author_username" />
+  </fieldset>
+  <p>
+    <input type="submit" value="Please save" name="commit">
   </p>
 </form>
 
