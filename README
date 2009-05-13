@@ -2,9 +2,9 @@
 
 Automatic adds labels to each of your input fields and wraps them both in an paragraph.
 Options added to each field helper are:
-* <tt>:label</tt> - Defines the label text, if set to false produces no label.
-* <tt>:label_position</tt> - Defines the label position, can be <tt>:before</tt> or <tt>:after</tt>. (TODO)
-* <tt>:wrap</tt> - Defines the wrap tag, false results in no wrap. Defaults to <tt>:p</tt>
+* <tt>:label</tt> - Defines the label text, if set to false produces no label. Defaults to human_attribute_name if model is set, else the humanized key.
+* <tt>:label_position</tt> - Defines the label position, can be <tt>:before</tt> or <tt>:after</tt>. Defaults to <tt>:before</tt>.
+* <tt>:wrap</tt> - Defines the wrap tag, false results in no wrap. Defaults to <tt>:p</tt>.
 
 Also includes an fieldset_for method, which extends fields_for
 with an fieldset tag and legend.
