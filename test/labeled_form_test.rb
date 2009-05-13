@@ -147,6 +147,36 @@ class LabeledFormTest < ActionView::TestCase
 
     assert_dom_equal expected, output_buffer
   end
+
+  def test_labeled_form_for_with_label_position
+    labeled_form_for(:post, @post, :html => { :id => 'create-post' }) do |f|
+      concat f.text_field(:title)
+      concat f.text_area(:body)
+      concat f.check_box(:secret, :label_position => :after)
+      concat f.submit('Create post')
+    end
+
+    expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
+    expected << "<p>" +
+                "<label for='post_title' title='Title'>Title</label>" +
+                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                "</p>"
+    expected << "<p>" + 
+                "<label for='post_body' title='Body'>Body</label>" +
+                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                "</p>"
+    expected << "<p>" + 
+                "<input name='post[secret]' type='hidden' value='0' />" +
+                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                "<label for='post_secret' title='Secret'>Secret</label>" +
+                "</p>"
+    expected << "<p>" + 
+                "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
+                "</p>"
+    expected << "</form>"
+
+    assert_dom_equal expected, output_buffer
+  end
   
   def test_labeled_form_for_without_labels
     labeled_form_for(:post, @post, :html => { :id => 'create-post' }) do |f|
