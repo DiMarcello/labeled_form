@@ -9,6 +9,7 @@ module DiMarcello
         define_method(method_name) do |method, *args|
           options = args.extract_options!
           labeled_options = extract_labeled_options(options)
+          labeled_options[:label_position] ||= :after if [:check_box, :radio_button].include?(method_name) 
           args << options
           
           field = super(method, *args)

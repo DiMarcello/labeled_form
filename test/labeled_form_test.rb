@@ -101,22 +101,22 @@ class LabeledFormTest < ActionView::TestCase
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<p>" +
-                "<label for='post_title' title='Title'>Title</label>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_body' title='Body'>Body</label>" +
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_secret' title='Secret'>Secret</label>" +
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
-                "</p>"
+    expected <<   "<p>" +
+                    "<label for='post_title' title='Title'>Title</label>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<label for='post_body' title='Body'>Body</label>" +
+                    "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                    "<label for='post_secret' title='Secret'>Secret</label>" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
+                  "</p>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
@@ -130,19 +130,19 @@ class LabeledFormTest < ActionView::TestCase
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<p>" +
-                "<label for='post_title' title='L'>L</label>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_body' title='L'>L</label>" +
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_secret' title='L'>L</label>" +
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
-                "</p>"
+    expected <<   "<p>" +
+                    "<label for='post_title' title='L'>L</label>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<label for='post_body' title='L'>L</label>" +
+                    "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                    "<label for='post_secret' title='L'>L</label>" +
+                  "</p>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
@@ -150,29 +150,29 @@ class LabeledFormTest < ActionView::TestCase
 
   def test_labeled_form_for_with_label_position
     labeled_form_for(:post, @post, :html => { :id => 'create-post' }) do |f|
-      concat f.text_field(:title)
+      concat f.text_field(:title, :label_position => :after)
       concat f.text_area(:body)
-      concat f.check_box(:secret, :label_position => :after)
+      concat f.check_box(:secret, :label_position => :before)
       concat f.submit('Create post')
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<p>" +
-                "<label for='post_title' title='Title'>Title</label>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_body' title='Body'>Body</label>" +
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
-                "</p>"
-    expected << "<p>" + 
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
-                "<label for='post_secret' title='Secret'>Secret</label>" +
-                "</p>"
-    expected << "<p>" + 
-                "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
-                "</p>"
+    expected <<   "<p>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                    "<label for='post_title' title='Title'>Title</label>" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<label for='post_body' title='Body'>Body</label>" +
+                    "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<label for='post_secret' title='Secret'>Secret</label>" +
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
+                  "</p>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
@@ -187,19 +187,19 @@ class LabeledFormTest < ActionView::TestCase
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<p>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
-                "</p>"
-    expected << "<p>" + 
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
-                "</p>"
+    expected <<   "<p>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                   "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                 "</p>"
+    expected <<   "<p>" + 
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
+                  "</p>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
@@ -213,13 +213,13 @@ class LabeledFormTest < ActionView::TestCase
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<label for='post_title' title='Title'>Title</label>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />"
-    expected << "<label for='post_body' title='Body'>Body</label>" +
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" 
-    expected << "<label for='post_secret' title='Secret'>Secret</label>" +
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />"
+    expected <<   "<label for='post_title' title='Title'>Title</label>" +
+                  "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />"
+    expected <<   "<label for='post_body' title='Body'>Body</label>" +
+                  "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" 
+    expected <<   "<input name='post[secret]' type='hidden' value='0' />" +
+                  "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                  "<label for='post_secret' title='Secret'>Secret</label>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
@@ -233,19 +233,19 @@ class LabeledFormTest < ActionView::TestCase
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<div>" +
-                "<label for='post_title' title='Title'>Title</label>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
-                "</div>"
-    expected << "<div>" + 
-                "<label for='post_body' title='Body'>Body</label>" +
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
-                "</div>"
-    expected << "<div>" + 
-                "<label for='post_secret' title='Secret'>Secret</label>" +
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
-                "</div>"
+    expected <<   "<div>" +
+                    "<label for='post_title' title='Title'>Title</label>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                  "</div>"
+    expected <<   "<div>" + 
+                    "<label for='post_body' title='Body'>Body</label>" +
+                    "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                  "</div>"
+    expected <<   "<div>" + 
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                    "<label for='post_secret' title='Secret'>Secret</label>" +
+                  "</div>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
@@ -259,19 +259,19 @@ class LabeledFormTest < ActionView::TestCase
     end
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
-    expected << "<p>" +
-                "<label for='post_title' title='Title'>Title</label>" +
-                "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_body' title='Body'>Body</label>" +
-                "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
-                "</p>"
-    expected << "<p>" + 
-                "<label for='post_secret' title='Secret'>Secret</label>" +
-                "<input name='post[secret]' type='hidden' value='0' />" +
-                "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
-                "</p>"
+    expected <<   "<p>" +
+                    "<label for='post_title' title='Title'>Title</label>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<label for='post_body' title='Body'>Body</label>" +
+                    "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                    "<label for='post_secret' title='Secret'>Secret</label>" +
+                  "</p>"
     expected << "</form>"
 
     assert_dom_equal expected, output_buffer
