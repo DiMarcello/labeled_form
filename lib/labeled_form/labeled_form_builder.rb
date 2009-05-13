@@ -2,7 +2,7 @@ module DiMarcello
   module LabeledForm
     #TODO add label_position option
     class LabeledFormBuilder < ActionView::Helpers::FormBuilder
-      LABELED_OPTIONS = [:label, :wrap]
+      LABELED_OPTIONS = [:label, :wrap, :label_position]
       
       private
       def self.create_tagged_field(method_name, label = true)
@@ -12,7 +12,7 @@ module DiMarcello
           args << options
           
           field = super(method, *args)
-          field = labeled_field(method, field, labeled_options[:label]) if label
+          field = labeled_field(method, field, labeled_options) if label
           tagged_field(field, labeled_options[:wrap])
         end
       end
@@ -53,24 +53,27 @@ module DiMarcello
         @template.content_tag(tag, field)
       end
       
-      def labeled_field(method, field, label = nil)
-        return field if label == false
-        method = method.to_sym
-        klass = nil
+      def labeled_field(method, field, options = {})
+        return field if options[:label] == false
+        method, label = method.to_s, options[:label]
+        klass, msg = nil
+        
         if object.nil?
-          label ||= method.to_s.humanize
+          label ||= method.humanize
           msg = label
         else
-          errors = object.errors.on(method)
-          klass =  'error' unless errors.blank?
-          msg = object.class.human_attribute_name method.to_s
+          errors  = object.errors.on(method)
+          label ||= object.class.human_attribute_name method
+          msg     = label
           unless errors.blank?
-            msg += ' ' + ((errors.class == Array) ? errors.join(' and ') : errors)
+            klass = 'error'
+            msg  += ' ' + ((errors.class == Array) ? errors.join(' and ') : errors)
           end
         end
         
-        [ @template.label(@object_name, method, label, objectify_options({:class => klass, :title => msg})), 
-          field ].join("")
+        fields = [@template.label(@object_name, method, label, objectify_options({:class => klass, :title => msg})), field]
+        fields.reverse! if options[:label_position] == :after
+        fields.join("")
       end
       
       def error_wrap_field(html_tag)

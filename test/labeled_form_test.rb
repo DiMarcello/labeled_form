@@ -131,15 +131,15 @@ class LabeledFormTest < ActionView::TestCase
 
     expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
     expected << "<p>" +
-                "<label for='post_title' title='Title'>L</label>" +
+                "<label for='post_title' title='L'>L</label>" +
                 "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
                 "</p>"
     expected << "<p>" + 
-                "<label for='post_body' title='Body'>L</label>" +
+                "<label for='post_body' title='L'>L</label>" +
                 "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
                 "</p>"
     expected << "<p>" + 
-                "<label for='post_secret' title='Secret'>L</label>" +
+                "<label for='post_secret' title='L'>L</label>" +
                 "<input name='post[secret]' type='hidden' value='0' />" +
                 "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
                 "</p>"
