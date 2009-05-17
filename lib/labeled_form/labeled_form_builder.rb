@@ -1,31 +1,37 @@
 module DiMarcello
   module LabeledForm
-    #TODO add label_position option
+    # TODO Move label options to: :label => {:text => "Label", :position => :after, :class => "test"}
+    # TODO Do something with the error wrap.
     class LabeledFormBuilder < ActionView::Helpers::FormBuilder
-      LABELED_OPTIONS = [:label, :wrap, :label_position]
+      HELPERS = [
+        ActionView::Helpers::FormBuilder.field_helpers + 
+        %w(date_select datetime_select time_select collection_select select country_select time_zone_select) - 
+        %w(hidden_field label fields_for submit)
+      ].flatten.freeze
       
       private
+      
       def self.create_tagged_field(method_name, label = true)
         define_method(method_name) do |method, *args|
           options = args.extract_options!
-          labeled_options = extract_labeled_options(options)
-          labeled_options[:label_position] ||= :after if [:check_box, :radio_button].include?(method_name) 
+          
+          label_options = extract_label_options(options)
+          label_options[:position] ||= :after if [:check_box, :radio_button].include?(method_name)
+          wrap = options.delete :wrap
           args << options
           
           field = super(method, *args)
-          field = labeled_field(method, field, labeled_options) if label
-          tagged_field(field, labeled_options[:wrap])
+          field = labeled_field(method, field, label_options) if label
+          tagged_field(field, wrap)
         end
       end
       
       public
-      %w(text_field password_field file_field text_area check_box radio_button select date_select datetime_select time_select collection_select).each do |name|
+      
+      HELPERS.each do |name|
         create_tagged_field(name.to_sym)
       end
-      
-      %w(submit).each do |name|
-        create_tagged_field(name.to_sym, false)
-      end
+      create_tagged_field(:submit, false)
       
       def fieldset_for(method, *args, &block)
         options = args.extract_options!
@@ -41,7 +47,13 @@ module DiMarcello
         fields_for(method, *(args << {:builder => builder}), &block)
         @template.concat('</fieldset>')
       end
-        
+      
+      def fields_for(*args, &block)
+        options = args.extract_options!
+        options[:builder] ||= self.class
+        super(*(args << options), &block)
+      end
+      
       def input(method, options = {})
         labeled_field(method, ActionView::Helpers::InstanceTag.new(@object_name, method, self, options[:object] || @object).to_tag)
       end
@@ -55,8 +67,8 @@ module DiMarcello
       end
       
       def labeled_field(method, field, options = {})
-        return field if options[:label] == false
-        method, label = method.to_s, options[:label]
+        return field if options[:text] == false
+        method, label = method.to_s, options.delete(:text)
         klass, msg = nil
         
         if object.nil?
@@ -72,8 +84,12 @@ module DiMarcello
           end
         end
         
-        fields = [@template.label(@object_name, method, label, objectify_options({:class => klass, :title => msg})), field]
-        fields.reverse! if options[:label_position] == :after
+        options[:class] = [options[:class], klass].compact.join(" ") unless klass.nil?
+        options[:title] ||= msg
+        position = options.delete :position
+        
+        fields = [@template.label(@object_name, method, label, objectify_options(options)), field]
+        fields.reverse! if position == :after
         fields.join("")
       end
       
@@ -89,12 +105,10 @@ module DiMarcello
         html_tag
       end
       
-      def extract_labeled_options(options)
-        returning({}) do |o|
-          LABELED_OPTIONS.each do |k|
-            o[k] = options.delete k
-          end
-        end
+      def extract_label_options(options)
+        label_options = options.delete :label
+        label_options = {:text => label_options} unless label_options.is_a? Hash
+        label_options
       end
     end
   end

@@ -2,21 +2,32 @@
 
 Automatic adds labels to each of your input fields and wraps them both in an paragraph.
 Options added to each field helper are:
-* <tt>:label</tt> - Defines the label text, if set to false produces no label. Defaults to human_attribute_name if model is set, else the humanized key.
-* <tt>:label_position</tt> - Defines the label position, can be <tt>:before</tt> or <tt>:after</tt>. Defaults to <tt>:before</tt>.
+* <tt>:label</tt> - Defines the label text and attributes, can be the following:
+  * <tt>String</tt> - Only defines the label text.
+  * <tt>false</tt> - Produces no label.
+  * <tt>Hash</tt> - Defines the attributes of the label with the following special attributes:
+    * <tt>:text</tt> - Defines the label text.
+    * <tt>:position</tt> - Defines the label position, can be <tt>:before</tt> or <tt>:after</tt>. Defaults to <tt>:after</tt> if the input is a checkbox or a radio button, else <tt>:before</tt>. 
+  * The label text defaults to human_attribute_name if model is set, else the humanized key.
 * <tt>:wrap</tt> - Defines the wrap tag, false results in no wrap. Defaults to <tt>:p</tt>.
 
-Also includes an fieldset_for method, which extends fields_for
-with an fieldset tag and legend.
-Besides default html options, 
-* <tt>:legend</tt> - Defines the legend, if false produces no legend. Defaults to association name.
-* <tt>:builder</tt> - Defines the builder to use. Defaults to the LabeledFormBuilder
+Also includes an fieldset_for method, which extends fields_for with a fieldset tag and legend.
+Besides default html options, accepts: 
+* <tt>:legend</tt> - Defines the legend, if false produces no legend. Defaults to the human association name or humanized key.
+* <tt>:builder</tt> - Defines the builder to use. Defaults to the LabeledFormBuilder. This options also applies to fields_for.
+
+Included also is a quick fix for InstanceTag's to_label_tag method. This method produces the for attribute with the id attribute's value
+when the id attribute is given. Fixed this with one little line added. A ticket has been sent to fix this, but in the mean while added the fix
+in this plugin.
+
 
 == Example
 
 	labeled_form_for object do |form|
 		form.text_field :name
 		form.text_area :body, :label => "Content"
+		form.check_box :read
+		form.check_box :write, :label => {:position => :before}
 		form.fieldset_for(:author, :class => "test") do |fs|
 		  fs.text_field :username, :wrap => false
 		end
@@ -32,6 +43,14 @@ Produces:
 	  <p>
 	    <label title="Content" for="object_body">Content</label>
 	    <textarea name="object[body]" id="object_body"></textarea>
+	  </p>
+	  <p>
+	    <input type="checkbox" name="object[read]" id="object_read" />
+	    <label title="Read" for="object_read">Read</label>
+	  </p>
+	  <p>
+	    <label title="Write" for="object_write">Write</label>
+	    <input type="checkbox" name="object[write]" id="object_write" />
 	  </p>
 	  <fieldset class="test">
 	    <legend>Author</legend>

@@ -125,7 +125,7 @@ class LabeledFormTest < ActionView::TestCase
   def test_labeled_form_for_with_custom_labels
     labeled_form_for(:post, @post, :html => { :id => 'create-post' }) do |f|
       concat f.text_field(:title, :label => "L")
-      concat f.text_area(:body, :label => "L")
+      concat f.text_area(:body, :label => {:text => "L"} )
       concat f.check_box(:secret, :label => "L")
     end
 
@@ -150,9 +150,9 @@ class LabeledFormTest < ActionView::TestCase
 
   def test_labeled_form_for_with_label_position
     labeled_form_for(:post, @post, :html => { :id => 'create-post' }) do |f|
-      concat f.text_field(:title, :label_position => :after)
+      concat f.text_field(:title, :label => {:position => :after})
       concat f.text_area(:body)
-      concat f.check_box(:secret, :label_position => :before)
+      concat f.check_box(:secret, :label => {:position => :before})
       concat f.submit('Create post')
     end
 
@@ -169,6 +169,36 @@ class LabeledFormTest < ActionView::TestCase
                     "<label for='post_secret' title='Secret'>Secret</label>" +
                     "<input name='post[secret]' type='hidden' value='0' />" +
                     "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
+                  "</p>"
+    expected << "</form>"
+
+    assert_dom_equal expected, output_buffer
+  end
+
+  def test_labeled_form_for_with_label_attributes
+    labeled_form_for(:post, @post, :html => { :id => 'create-post' }) do |f|
+      concat f.text_field(:title, :label => {:class => "selector" })
+      concat f.text_area(:body, :label => {:title => "Title" })
+      concat f.check_box(:secret, :label => {:id => "id123" })
+      concat f.submit('Create post')
+    end
+
+    expected  = "<form action='http://www.example.com' id='create-post' method='post'>"
+    expected <<   "<p>" +
+                    "<label for='post_title' title='Title' class='selector'>Title</label>" +
+                    "<input name='post[title]' size='30' type='text' id='post_title' value='Hello World' />" +
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<label for='post_body' title='Title'>Body</label>" +
+                    "<textarea name='post[body]' id='post_body' rows='20' cols='40'>Back to the hill and over it again!</textarea>" + 
+                  "</p>"
+    expected <<   "<p>" + 
+                    "<input name='post[secret]' type='hidden' value='0' />" +
+                    "<input name='post[secret]' checked='checked' type='checkbox' id='post_secret' value='1' />" +
+                    "<label for='post_secret' title='Secret' id='id123'>Secret</label>" +
                   "</p>"
     expected <<   "<p>" + 
                     "<input name='commit' id='post_submit' type='submit' value='Create post' />" +
